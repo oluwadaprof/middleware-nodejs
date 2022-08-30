@@ -1,0 +1,3 @@
+20220830	16:10:47	3ffd357f-97be-4834-927c-03db3df8e5e6	GET	undefined	/
+20220830	16:10:47	addca89a-029d-454e-aa24-1d6cbd90d0d7	GET	undefined	/css/style.css
+20220830	16:10:47	9f97bc00-1f3a-4ac3-b3ce-56b82f3e4232	GET	undefined	/favicon.ico
