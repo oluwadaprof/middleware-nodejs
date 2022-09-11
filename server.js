@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const cors = require('cors')
+const corsOption = require('./config/corsOptions')
 const {logEvents, logger }= require('./middleware/logEvents')
 const errorHandler = require('./middleware/errorHandler')
 const PORT = process.env.PORT || 3500;
@@ -12,76 +13,22 @@ const PORT = process.env.PORT || 3500;
 app.use(logger)
 
 // Cross Origin Resource Sharing
-const whitelist = ['https://www.google.com', 'http://127.0.0:5500', 'http://localhost:3500']
-const corsOption = {
-  origin: (origin, callback)=> {
-    if (whitelist.indexOf(origin) !== -1 || !origin){
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  },
-  optionsSuccessStatus: 200
-}
 app.use(cors(corsOption))
 
-//buil-in middleware to handle urlencoded data
-//in other words, form data:
-//'content-type: application/x-www-form-urlencoded'
+//built-in middleware to handle urlencoded data
 app.use(express.urlencoded({extended:false}))
 
 // built-in middleware for json
 app.use(express.json())
 
 //server static files
-app.use(express.static(path.join(__dirname, '/public')))
+app.use('/', express.static(path.join(__dirname, '/public')))
+
+//routes
+app.use('/', require('./routes/root'))
+app.use('/employee', require('./routes/api/employees'))
 
 
-app.get("^/$|/index(.html)?", function (req, res) {
-  // res.sendFile('./views/index.html' , {root: __dirname});
-  res.sendFile(path.join(__dirname, "views", "index.html"));
-});
-
-app.get("/new-page(.html)?", function (req, res) {
-  // res.sendFile('./views/new-page.html' , {root: __dirname});
-  res.sendFile(path.join(__dirname, "views", "index.html"));
-});
-
-
-
-app.get("/old-page(.html)?", function (req, res) {
-  res.redirect(301, "new-page.html");
-});
-
-//Route Handlers
-app.get(
-  "/hello(.html)?",
-  function (req, res, next) {
-    console.log("attempted to load html file");
-    next();
-  },
-  function (req, res) {
-    res.send("hello world");
-  }
-);
-
-//chaining route handlers
-const one = (res, req , next) => {
-  console.log('one')
-  next()
-}
-
-const two = (res, req , next) => {
-  console.log('two')
-  next()
-}
-
-const three = (res, req ) => {
-  console.log(three)
-  res.send('Finished')
-}
-
-app.get('/chain(.html)?', [one, two, three])
 
 app.all("*", function (req, res) {
   res.status(404);
