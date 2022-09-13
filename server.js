@@ -30,7 +30,7 @@ app.use('/employee', require('./routes/api/employees'))
 
 
 
-app.all("*", function (req, res) {
+app.all("*",  (req, res) => {
   res.status(404);
    
   if (req.accepts('html')){
