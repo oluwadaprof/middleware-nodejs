@@ -23,7 +23,7 @@ app.use(express.json())
 
 //server static files
 app.use('/', express.static(path.join(__dirname, '/public')))
-
+ 
 //routes
 app.use('/', require('./routes/root'))
 app.use('/employee', require('./routes/api/employees'))
